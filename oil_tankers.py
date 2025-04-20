@@ -156,4 +156,26 @@ for event in events:
 print("\nAverage days in port per tanker type:")
 for tanker_type in total_days_in_port:
     avg_days = total_days_in_port[tanker_type] / tanker_counts[tanker_type]
-    print(f"{tanker_type}: {avg_days:.0f}")
+    print(f"{tanker_type}: {avg_days:.2f}")
+
+# Calculate the average number of days in queue by terminal
+total_queue_time = {"A": 0, "B": 0}
+for event in events:
+    terminal = event["terminal"]
+    # Queue time is the time between arrival and start of service
+    queue_time = event["start"] - event["arrival"]
+    total_queue_time[terminal] += queue_time
+
+# Calculate and print average queue time by terminal
+print("\nAverage days in queue by terminal:")
+if num_tankers_A > 0:
+    avg_queue_A = total_queue_time["A"] / num_tankers_A
+    print(f"Terminal A: {avg_queue_A:.2f}")
+else:
+    print("Terminal A: N/A (no tankers processed)")
+    
+if num_tankers_B > 0:
+    avg_queue_B = total_queue_time["B"] / num_tankers_B
+    print(f"Terminal B: {avg_queue_B:.2f}")
+else:
+    print("Terminal B: N/A (no tankers processed)")
