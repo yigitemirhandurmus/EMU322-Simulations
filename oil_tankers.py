@@ -6,6 +6,8 @@ B is more efficient than A therefore is preferred
 
 '''
 
+random.seed(90345)  # For reproducibility
+
 tankers_to_simulate = 10
 
 # Define the number of days for unloading by tanker size at each terminal
