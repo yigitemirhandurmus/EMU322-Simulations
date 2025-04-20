@@ -80,12 +80,13 @@ for i in range(tankers_to_simulate):
     # Update terminal availability
     next_free[terminal] = departure_time
 
-    # Record the event
+    # Record the event with tanker type information
     events.append({
         "arrival": arrival_time,
         "start": start_time,
         "departure": departure_time,
-        "terminal": terminal
+        "terminal": terminal,
+        "tanker_size": tanker_size
     })
 
 # Determine final simulation time (last departure)
@@ -141,3 +142,18 @@ print("\nUtilization:")
 print(f"Terminal A: {avg_A:.2f}")
 print(f"Terminal B: {avg_B:.2f}")
 
+# Calculate the average number of days in port for each tanker type
+total_days_in_port = {}
+tanker_counts = {}
+
+for event in events:
+    tanker_type = event["tanker_size"]
+    # The days in port equals departure time minus arrival time
+    time_in_port = event["departure"] - event["arrival"]
+    total_days_in_port[tanker_type] = total_days_in_port.get(tanker_type, 0) + time_in_port
+    tanker_counts[tanker_type] = tanker_counts.get(tanker_type, 0) + 1
+
+print("\nAverage days in port per tanker type:")
+for tanker_type in total_days_in_port:
+    avg_days = total_days_in_port[tanker_type] / tanker_counts[tanker_type]
+    print(f"{tanker_type}: {avg_days:.0f}")
