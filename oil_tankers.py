@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 
 ''' A and B terminals
 
@@ -128,10 +129,6 @@ for time_point, term, change in time_changes:
 avg_A = total_occupancy_time["A"] / sim_end
 avg_B = total_occupancy_time["B"] / sim_end
 
-print("Tanker events:")
-for event in events:
-    print(event)
-
 # Count the number of tankers processed at each terminal
 num_tankers_A = sum(1 for event in events if event["terminal"] == "A")
 num_tankers_B = sum(1 for event in events if event["terminal"] == "B")
@@ -181,3 +178,37 @@ if num_tankers_B > 0:
     print(f"Terminal B: {avg_queue_B:.2f}")
 else:
     print("Terminal B: N/A (no tankers processed)")
+
+# Create pandas DataFrame with required information
+tanker_data = []
+for i, event in enumerate(events):
+    tanker_id = i + 1
+    tanker_type = event["tanker_size"]
+    arrival_time = event["arrival"]
+    start_time = event["start"]
+    departure_time = event["departure"]
+    terminal = event["terminal"]
+    time_in_port = departure_time - arrival_time
+    time_in_queue = start_time - arrival_time
+    service_time = departure_time - start_time
+    
+    tanker_data.append({
+        # "Tanker ID": tanker_id,
+        "Tanker Type": tanker_type,
+        "Arrival Time": arrival_time,
+        "Start Time": start_time,
+        "Departure Time": departure_time,
+        "Terminal": terminal,
+        "Time in Port": time_in_port,
+        "Time in Queue": time_in_queue,
+        "Service Time": service_time
+    })
+
+# Create the DataFrame
+df = pd.DataFrame(tanker_data)
+
+print("\nTanker Information Table:")
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.precision', 2)
+print(df)
